@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.LinkDao" >
+	<resultMap type="com.app.entity.Link" id="BaseLinkMap">
+		<id  property="id" column="id"/>
+		<result property="linkUrl" column="linkUrl"/>
+		<result property="linkName" column="linkName"/>
+		<result property="createTime" column="createTime"/>
+	</resultMap>
+
+	<!-- 查询所有的友情链接 -->
+	<select id="linkList" resultMap="BaseLinkMap">
+		SELECT id,linkUrl,linkName,createTime FROM link GROUP BY createTime DESC
+	</select>
+	<!-- 根据id查询链接 -->
+	<select id="getLinkById" parameterType="int" resultMap="BaseLinkMap">
+		SELECT id,linkUrl,linkName,createTime FROM link where id=#{id}
+	</select>
+	<!-- 修改链接 -->
+	<update id="updateLink" parameterType="com.app.entity.Link" >
+		UPDATE link 
+		<set>
+		<if test="linkUrl != null and linkUrl !=''">linkUrl=#{linkUrl},</if>
+      	<if test="linkName != null and linkName !=''">linkName=#{linkName}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 添加链接 -->
+	<insert id="addLink" parameterType="com.app.entity.Link" >
+		insert into link (linkUrl,linkName,createTime)
+		values (#{linkUrl},#{linkName},#{createTime})
+	</insert>
+	<!-- 删除连接 -->
+	<delete id="deleteLinkById" parameterType="int">
+		DELETE  from link where id=#{id}
+	</delete>
+</mapper>

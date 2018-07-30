@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.CooperationDao" >
+
+	<resultMap type="com.app.entity.Cooperation" id="BaseCooperationMap">
+		<id  property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="imagePath" column="imagePath"/>
+		<result property="content" column="content"/>
+		<result property="createTime" column="createTime"/>
+	</resultMap>
+	<!-- 返回全部的交流文件 -->
+	<select id="getCooperationList" resultMap="BaseCooperationMap">
+		SELECT id,title,createTime,content,imagePath FROM cooperation 
+		ORDER BY createTime DESC
+	</select>
+	<!-- 根据id返回单个的交流文件 -->
+	<select id="getCooperationById" parameterType="Integer" resultMap="BaseCooperationMap">
+		SELECT id,title,createTime,content,imagePath FROM cooperation 
+		WHERE id=#{id}
+	</select>
+	<!-- 返回数量 -->
+	<select id="getCooperationNumber" resultType="Integer">
+		SELECT COUNT(id) FROM cooperation
+	</select>
+	<!-- 添加 -->
+	<insert id="addCooperation" parameterType="com.app.entity.Cooperation">
+		insert into cooperation (title,createTime,imagePath,content)
+		values (#{title},#{createTime},#{imagePath},#{content})
+	</insert>
+	<!-- 修改 -->
+	<update id="updateCooperationById" parameterType="com.app.entity.Cooperation">
+		UPDATE cooperation 
+		<set>
+		<if test="title != null and title !=''">title=#{title},</if>
+      	<if test="imagePath != null and imagePath !=''">imagePath=#{imagePath},</if>
+      	<if test="content != null and content !=''">content=#{content}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteCooperationById" parameterType="Integer">
+		DELETE from cooperation where id=#{id}
+	</delete>
+</mapper>

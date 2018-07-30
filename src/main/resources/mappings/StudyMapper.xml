@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.StudyDao" >
+	<resultMap type="com.app.entity.Study" id="BaseStudyMap">
+		<id  property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="createTime" column="createTime"/>
+		<result property="imagePath" column="imagePath"/>
+		<result property="content" column="content"/>
+		<result property="state" column="state"/>
+	</resultMap>
+	<!-- 根据状态查询 -->
+	<select id="getStudyList" parameterType="int" resultMap="BaseStudyMap">
+		SELECT id,title,createTime,content,imagePath,state FROM study 
+		WHERE state=#{state} ORDER BY createTime DESC
+	</select>
+	<!-- 根据id查询 -->
+	<select id="getStudyById" parameterType="Integer" resultMap="BaseStudyMap">
+		SELECT id,title,createTime,content,imagePath,state FROM study 
+		WHERE id=#{id}
+	</select>
+	<!-- 查询条数 -->
+	<select id="getNumberStudy" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(id) FROM study  WHERE state=#{state}
+	</select>
+	<!-- 添加 -->
+	<insert id="addStudy" parameterType="com.app.entity.Study">
+		insert into study (title,createTime,imagePath,content,state)
+		values (#{title},#{createTime},#{imagePath},#{content},#{state})
+	</insert>
+	<!-- 修改 -->
+	<update id="updateStudy" parameterType="com.app.entity.Study">
+		UPDATE study 
+		<set>
+		<if test="title != null and title !=''">title=#{title},</if>
+      	<if test="imagePath != null and imagePath !=''">imagePath=#{imagePath},</if>
+      	<if test="content != null and content !=''">content=#{content}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteStudyById" parameterType="Integer">
+		DELETE from study where id=#{id}
+	</delete>
+</mapper>

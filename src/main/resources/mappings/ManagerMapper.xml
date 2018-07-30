@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.ManagerDao" >
+	<resultMap type="com.app.entity.Manager" id="BaseManagerMap">
+		<id  property="id" column="id"/>
+		<result property="ManagerName" column="ManagerName"/>
+		<result property="possWord" column="possWord"/>
+	</resultMap>
+	<!-- 根据用户名和密码获取用户 -->
+	<select id="getManagerByName" parameterType="com.app.entity.Manager" resultMap="BaseManagerMap">
+		SELECT id,managerName,possWord FROM manager WHERE 
+		managerName=#{managerName} AND possWord=#{possWord}
+	</select>
+	<!-- 根据用的id获取用户 -->
+	<select id="getManagerById" parameterType="Integer" resultMap="BaseManagerMap">
+		SELECT id,managerName,possWord FROM manager WHERE id=#{id} 
+	</select>
+	<!-- 修改用户 -->
+	<update id="updateManager" parameterType="com.app.entity.Manager" >
+		UPDATE manager 
+		<set>
+		<if test="managerName != null and managerName !=''">managerName=#{managerName},</if>
+      	<if test="possWord != null and possWord !=''">possWord=#{possWord}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.RegulationDao" >
+	<resultMap type="com.app.entity.Regulation" id="BaseRegulationMap">
+		<id  property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="createTime" column="createTime"/>
+		<result property="content" column="content"/>
+		<result property="state" column="state"/>
+	</resultMap>
+	<!-- 查询全部规章制度 -->
+	<select id="getRegulationList" resultMap="BaseRegulationMap">
+		SELECT id,title,createTime,content,state FROM regulation 
+		ORDER BY createTime DESC
+	</select>
+	<!-- 根据状态查询,前端使用 -->
+	<select id="getRegulationByState" resultMap="BaseRegulationMap">
+		SELECT id,title,createTime,content,state FROM regulation 
+		WHERE state=1
+		ORDER BY createTime DESC
+	</select>
+	<!-- 根据id查询 -->
+	<select id="getRegulationById" parameterType="Integer" resultMap="BaseRegulationMap">
+		SELECT id,title,createTime,content,state FROM regulation 
+		WHERE id=#{id}
+	</select>
+	<!-- 查询规章制度的条数 -->
+	<select id="getRegulationNumber" resultType="Integer">
+		SELECT COUNT(id) FROM regulation
+	</select>
+	<!-- 添加规章制度 -->
+	<insert id="addRegulation" parameterType="com.app.entity.Regulation">
+		insert into regulation (title,createTime,content,state)
+		values (#{title},#{createTime},#{content},#{state})
+	</insert>
+	<!-- 修改规章制度 -->
+	<update id="updateRegulation" parameterType="com.app.entity.Regulation">
+		UPDATE regulation 
+		<set>
+		<if test="title != null and title !=''">title=#{title},</if>
+      	<if test="content != null and content !=''">content=#{content}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 修改规章制度状态，是否设为前台展示 -->
+	<update id="updateRegulationState" parameterType="com.app.entity.Regulation">
+		UPDATE regulation 
+		<set>
+			state=#{state}
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 删除规章制度 -->
+	<delete id="deleteRegulationById" parameterType="Integer">
+		DELETE from regulation where id=#{id}
+	</delete>
+</mapper>

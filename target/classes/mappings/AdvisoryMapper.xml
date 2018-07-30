@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.AdvisoryDao" >
+	<resultMap type="com.app.entity.Advisory" id="BaseAdvisoryMap">
+		<id  property="id" column="id"/>
+		<result property="advisoryTitle" column="advisoryTitle"/>
+		<result property="advisoryDetails" column="advisoryDetails"/>
+		<result property="advisoryTime" column="advisoryTime"/>
+	</resultMap>
+	<!-- 查询所有的咨询 -->
+	<select id="getAdvisorieList" resultMap="BaseAdvisoryMap">
+		SELECT id,advisoryDetails,advisoryTitle,advisoryTime FROM advisory 
+		ORDER BY advisoryTime DESC
+	</select>
+	<!-- 查询前六条咨询 -->
+	<select id="getAdvisorieBeforeSix" resultMap="BaseAdvisoryMap">
+		SELECT id,advisoryTitle,advisoryDetails,advisoryTime FROM advisory 
+		ORDER BY advisoryTime DESC LIMIT 6
+	</select>
+	<!-- 根据咨询的id查询单个的咨询 -->
+	<select id="getAdvisoryById" parameterType="int" resultMap="BaseAdvisoryMap">
+		SELECT id,advisoryDetails,advisoryTitle,advisoryTime FROM advisory
+		WHERE id=#{id}
+	</select>
+	<!-- 添加咨询 -->
+	<insert id="addAdvisory" parameterType="com.app.entity.Advisory">
+		insert into advisory (advisoryDetails,advisoryTitle,advisoryTime)
+		values (#{advisoryDetails},#{advisoryTitle},#{advisoryTime})
+	</insert>
+	<!-- 修改咨询 -->
+	<update id="updateAdvisoryById" parameterType="com.app.entity.Advisory">
+		UPDATE advisory 
+		<set>
+		<if test="advisoryTitle != null and advisoryTitle !=''">advisoryTitle=#{advisoryTitle},</if>
+      	<if test="advisoryDetails != null and advisoryDetails !=''">advisoryDetails=#{advisoryDetails}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 根据id删除咨询 -->
+	<delete id="deleteAdvisoryById" parameterType="int">
+		DELETE FROM advisory WHERE id=#{id}
+	</delete>
+	<!-- 添加详情图片 -->
+	<insert id="addAdvisoryImage" parameterType="String">
+		insert into advisoryImage (imagePath)
+		values (#{imagePath})
+	</insert>
+</mapper>

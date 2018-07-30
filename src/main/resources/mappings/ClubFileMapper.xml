@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.ClubFileDao" >
+	<resultMap type="com.app.entity.ClubFile" id="BaseClubFileMap">
+		<id  property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="createTime" column="createTime"/>
+		<result property="content" column="content"/>
+	</resultMap>
+	<!-- 查询所有数据 -->
+	<select id="getClubFileList" resultMap="BaseClubFileMap">
+		SELECT id,title,createTime,content FROM clubFile 
+		ORDER BY createTime DESC
+	</select>
+	<!-- 根据id返回单个的社团文件 -->
+	<select id="getClubFileById" parameterType="Integer" resultMap="BaseClubFileMap">
+		SELECT id,title,createTime,content FROM clubFile WHERE id=#{id}
+	</select>
+	<!-- 查询条数 -->
+	<select id="getClubFileNumber" resultType="Integer">
+		SELECT COUNT(id) FROM clubFile
+	</select>
+	<!-- 添加文件 -->
+	<insert id="addClubFile" parameterType="com.app.entity.ClubFile">
+		insert into clubFile (title,createTime,content)
+		values (#{title},#{createTime},#{content})
+	</insert>
+	<!-- 修改社团文件 -->
+	<update id="updateClubFileById" parameterType="com.app.entity.ClubFile">
+		UPDATE clubFile 
+		<set>
+		<if test="title != null and title !=''">title=#{title},</if>
+      	<if test="content != null and content !=''">content=#{content}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 根据id删除单条社团文件 -->
+	<delete id="deleteClubFileById" parameterType="Integer">
+		DELETE from clubFile where id=#{id}
+	</delete>
+</mapper>

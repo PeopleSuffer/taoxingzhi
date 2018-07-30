@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.app.dao.IntroductionDao" >
+	<resultMap type="com.app.entity.Introduction" id="BaseIntroductionMap">
+		<id  property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="createTime" column="createTime"/>
+		<result property="content" column="content"/>
+		<result property="state" column="state"/>
+	</resultMap>
+	<!-- 查询全部简介 -->
+	<select id="getIntroductionList" resultMap="BaseIntroductionMap">
+		SELECT id,title,createTime,content,state FROM introduction 
+		ORDER BY createTime DESC
+	</select>
+	<!-- 根据状态查询,前端使用 -->
+	<select id="getIntroductionByState" parameterType="Integer" resultMap="BaseIntroductionMap">
+		SELECT id,title,createTime,content,state FROM introduction 
+		WHERE state=#{state}
+		ORDER BY createTime DESC
+	</select>
+	<!-- 根据id查询 -->
+	<select id="getiIntroductionById" parameterType="Integer" resultMap="BaseIntroductionMap">
+		SELECT id,title,createTime,content,state FROM introduction 
+		WHERE id=#{id}
+	</select>
+	<!-- 添加简介 -->
+	<insert id="addIntroduction" parameterType="com.app.entity.Introduction">
+		insert into introduction (title,createTime,content,state)
+		values (#{title},#{createTime},#{content},#{state})
+	</insert>
+	<!-- 修改简介 -->
+	<update id="updateIntroduction" parameterType="com.app.entity.Introduction">
+		UPDATE introduction 
+		<set>
+		<if test="title != null and title !=''">title=#{title},</if>
+      	<if test="content != null and content !=''">content=#{content}</if>
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 修改简介状态，是否设为前台展示 -->
+	<update id="updateIntroductionState" parameterType="com.app.entity.Introduction">
+		UPDATE introduction 
+		<set>
+			state=#{state}
+      	</set>
+      	where id=#{id}
+	</update>
+	<!-- 删除简介 -->
+	<delete id="deleteIntroductionById" parameterType="Integer">
+		DELETE from introduction where id=#{id}
+	</delete>
+</mapper>
